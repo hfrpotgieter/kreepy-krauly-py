@@ -18,7 +18,6 @@ def google_search(query: str):
     }
 
     def _request(url: str, params: dict):
-        # light retry/backoff for transient throttling (202/429)
         last_resp = None
         for delay in (0, 1.0, 2.0):
             if delay:
@@ -31,13 +30,11 @@ def google_search(query: str):
                 break
         return last_resp, None
 
-    # Try standard HTML endpoint first
     resp, err = _request("https://duckduckgo.com/html/", {"q": query})
     if err:
         print(f"[search] request exception for query '{query}': {err}")
         return [{"title": "Search request failed", "link": err}]
 
-    # If DuckDuckGo throttles/bot-checks us, fall back to the 'lite' endpoint.
     if resp is not None and resp.status_code in (202, 429):
         resp, err = _request("https://lite.duckduckgo.com/lite/", {"q": query})
         if err:
@@ -52,7 +49,6 @@ def google_search(query: str):
 
     soup = BeautifulSoup(resp.text, "lxml")
 
-    # 'html' endpoint uses a.result__a, 'lite' endpoint uses a.result-link
     links = soup.select("a.result__a")
     lite_mode = False
     if not links:
@@ -66,12 +62,9 @@ def google_search(query: str):
         if not title or not href:
             continue
 
-        # DuckDuckGo wraps target URLs in redirect links like:
-        # //duckduckgo.com/l/?uddg=<encoded_url>&rut=...
-        # or /l/?uddg=<encoded_url>
         link = href
         if "/l/?" in href or href.startswith("//duckduckgo.com/l/?"):
-            # Handle protocol-relative URLs (//duckduckgo.com/...) or absolute paths (/l/?...)
+
             if href.startswith("//"):
                 href = "https:" + href
             parsed = urlparse(href)
@@ -80,13 +73,10 @@ def google_search(query: str):
             if target:
                 link = unquote(target)
             else:
-                # Fallback: if no uddg param, skip this link
                 continue
         elif lite_mode and href.startswith("//"):
-            # Lite sometimes returns protocol-relative direct URLs
             link = "https:" + href
 
-        # Only keep http/https links
         if not (link.startswith("http://") or link.startswith("https://")):
             continue
 
