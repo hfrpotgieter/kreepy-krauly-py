@@ -2,6 +2,7 @@ from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 import requests
 from urllib.parse import urlparse, parse_qs, unquote
+import time
 
 def web_search(query: str):
     """
