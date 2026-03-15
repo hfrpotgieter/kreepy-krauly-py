@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 from urllib.parse import urlparse, parse_qs, unquote
 
-def google_search(query: str):
+def web_search(query: str):
     """
     NOTE: Google SERP HTML is frequently blocked (consent/captcha/unusual traffic),
     which makes "no-key" scraping unreliable.

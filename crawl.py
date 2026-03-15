@@ -49,10 +49,10 @@ def crawl_site(url: str):
     company_name = info.title.string if info.title else "Not found (404)"
 
     contact_info = {
-            'name': company_name
-            'Website': res.url,
-            'Email': remove_duplicates(list(get_email(info.get_text()))),
-            'Phone': remove_duplicates(list(get_phone(info.get_text())))
+            'name': company_name,
+            'link': res.url,
+            'email': remove_duplicates(list(get_email(info.get_text()))),
+            'phone': remove_duplicates(list(get_phone(info.get_text())))
     }
 
     return contact_info
