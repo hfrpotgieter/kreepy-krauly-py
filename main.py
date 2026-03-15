@@ -1,4 +1,4 @@
 from search import google_search
+from crawl import crawl_site
 
-for it in google_search("instagram"):
-    print(it["title"])
+print(crawl_site("https://www.gelmar.co.za/contact"))
