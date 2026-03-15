@@ -1,5 +1,5 @@
 # Use the official Python runtime image
-FROM python:3.12.3
+FROM python:3.12.3 
 
 # Set environment variables 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -23,4 +23,4 @@ COPY . /app/
 EXPOSE 8000
 
 # Run using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "crawler.wsgi:application"]
+CMD exec gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 --threads 8 --timeout 0 crawler.wsgi:application

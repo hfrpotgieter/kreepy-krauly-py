@@ -14,12 +14,17 @@ from django.http import HttpResponse
 
 def waiting_room(request):
     term = request.GET.get("searchTerm", "")
-    search_results = web_search(term)
-
     contacts = []
-    for it in search_results:
-        contact = crawl_site(it["link"])
-        if contact:
+    if term.startswith("https") or term.startswith("http"):
+        contact = crawl_site(term)
+        if contact is not None:
+            contacts.append(contact)
+    else:
+        search_results = web_search(term)
+        for it in search_results:
+            contact = crawl_site(it["link"])
+            if contact is None:
+                continue
             contacts.append(contact)
 
 

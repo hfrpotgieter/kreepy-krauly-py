@@ -40,11 +40,13 @@ def fetch_site(url: str):
         res.raise_for_status()
         return res
     except requests.exceptions.RequestException as e:
-        print(e)
+        print(f"Error crawling {url}: {e}")
+        return None
 
 def crawl_site(url: str):
     res = fetch_site(url)
-    
+    if res is None:
+        return None
     info = BeautifulSoup(res.text, 'lxml')
     company_name = info.title.string if info.title else "Not found (404)"
 
