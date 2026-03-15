@@ -1,6 +1,7 @@
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 import requests
+from urllib.parse import urlparse, parse_qs, unquote
 
 def google_search(query: str):
     """

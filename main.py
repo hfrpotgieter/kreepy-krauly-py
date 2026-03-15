@@ -1,3 +1,4 @@
 from search import google_search
 
-print(google_search("instagram"))
+for it in google_search("instagram"):
+    print(it["title"])
