@@ -1,32 +1,26 @@
 # Use the official Python runtime image
-FROM python:3.12.3  
- 
-# Create the app directory
-RUN mkdir /app
- 
-# Set the working directory inside the container
-WORKDIR /app
- 
+FROM python:3.12.3-slim  
+
 # Set environment variables 
-# Prevents Python from writing pyc files to disk
 ENV PYTHONDONTWRITEBYTECODE=1
-#Prevents Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED=1 
- 
-# Upgrade pip
-RUN pip install --upgrade pip setuptools wheel
- 
-# Copy the Django project  and install dependencies
-COPY requirements.txt  /app/
- 
-# run this command to install all dependencies 
-RUN pip install --no-cache-dir -r requirements.txt
- 
-# Copy the Django project to the container
+
+# Set the working directory (automatically creates the dir)
+WORKDIR /app
+
+# Install system dependencies if needed (e.g., for psycopg2 or pillow)
+# RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip and install dependencies
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the Django project
 COPY . /app/
- 
+
 # Expose the Django port
 EXPOSE 8000
- 
-# Run Django’s development server
+
+# Run using Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "crawler.wsgi:application"]
