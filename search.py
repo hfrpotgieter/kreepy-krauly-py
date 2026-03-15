@@ -4,7 +4,7 @@ import requests
 from urllib.parse import urlparse, parse_qs, unquote
 import time
 
-def web_search(query: str):
+def web_search(query: str, userAgent: str):
     """
     NOTE: Google SERP HTML is frequently blocked (consent/captcha/unusual traffic),
     which makes "no-key" scraping unreliable.
@@ -13,7 +13,7 @@ def web_search(query: str):
     to provide titles/links without any API key, instead of scraping Google.
     """
     headers = {
-        "User-Agent": UserAgent().chrome,
+        "User-Agent": userAgent,
         "Accept-Language": "en-US,en;q=0.9",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     }

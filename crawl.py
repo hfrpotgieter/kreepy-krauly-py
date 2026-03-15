@@ -28,10 +28,10 @@ def extract_facebook_url(soup):
     fb_links = [a['href'] for a in soup.find_all('a', href=re.compile('facebook.com', re.IGNORECASE)) if 'href' in a.attrs]
     return fb_links[0] if fb_links else None
 
-def fetch_site(url: str):
+def fetch_site(url: str, userAgent: str):
     try:
         headers = {
-            "User-Agent": UserAgent().chrome,
+            "User-Agent": userAgent,
             "Accept-Language": "en-US,en;q=0.9",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         }
@@ -43,8 +43,8 @@ def fetch_site(url: str):
         print(f"Error crawling {url}: {e}")
         return None
 
-def crawl_site(url: str):
-    res = fetch_site(url)
+def crawl_site(url: str, userAgent: str):
+    res = fetch_site(url, userAgent)
     if res is None:
         return None
     info = BeautifulSoup(res.text, 'lxml')

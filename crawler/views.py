@@ -13,16 +13,17 @@ import pandas as pd
 from django.http import HttpResponse
 
 def waiting_room(request):
+    agent = request.META.get('HTTP_USER_AGENT')
     term = request.GET.get("searchTerm", "")
     contacts = []
     if term.startswith("https") or term.startswith("http"):
-        contact = crawl_site(term)
+        contact = crawl_site(term, agent)
         if contact is not None:
             contacts.append(contact)
     else:
-        search_results = web_search(term)
+        search_results = web_search(term, agent)
         for it in search_results:
-            contact = crawl_site(it["link"])
+            contact = crawl_site(it["link"], agent)
             if contact is None:
                 continue
             contacts.append(contact)
