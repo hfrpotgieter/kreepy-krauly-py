@@ -29,4 +29,4 @@ COPY . /app/
 EXPOSE 8000
  
 # Run Django’s development server
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "kreepykrauly.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "crawler.wsgi:application"]
