@@ -35,7 +35,7 @@ def fetch_site(url: str):
             "Accept-Language": "en-US,en;q=0.9",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         }
-        res = requests.get(url, headers=headers)
+        res = requests.get(url, headers=headers, timeout=12)
        
         res.raise_for_status()
         return res
